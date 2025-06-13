@@ -66,9 +66,9 @@ history_file = f"history_{username}.csv"
 #login
 st.markdown(f"✅ Sedang login sebagai: **{username.title()}**")
 if st.button("🔄 Ganti Pengguna"):
-    if 'username' in st.session_state:
-        st.session_state.pop('username')
+    st.session_state.clear()
     st.rerun()
+
 
 # Inisialisasi file jika belum ada
 if not os.path.exists(history_file):
@@ -107,10 +107,7 @@ if st.button("🔍 Prediksi Mood"):
         st.info(motivasi_dict.get(prediction, "Tetap semangat ya!"))
     else:
         st.warning("Silakan masukkan teks terlebih dahulu.")
-
-
-
-
+    
 
 # Tabs
 try:
