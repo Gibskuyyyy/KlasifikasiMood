@@ -41,10 +41,26 @@ label_indo = {
     'fear': 'Takut', 'love': 'Cinta', 'neutral': 'Netral'
 }
 
-HISTORY_FILE = "history.csv"
-if not os.path.exists(HISTORY_FILE):
+# Input nama pengguna
+username = st.text_input("Masukkan nama atau ID kamu:")
+if not username:
+    st.warning("Harap masukkan nama/ID terlebih dahulu.")
+    st.stop()
+
+username = username.strip().lower()
+history_file = f"history_{username}.csv"
+
+# Tombol reset histori
+if os.path.exists(history_file):
+    if st.button("🗑️ Reset histori saya"):
+        os.remove(history_file)
+        st.success("Histori berhasil direset.")
+        st.stop()
+
+# Inisialisasi file jika belum ada
+if not os.path.exists(history_file):
     df_empty = pd.DataFrame(columns=["Waktu", "Teks", "Mood", "Emoji", "Score"])
-    df_empty.to_csv(HISTORY_FILE, index=False)
+    df_empty.to_csv(history_file, index=False)
 
 # Header
 st.markdown("<h1 style='text-align: center; color: #6C63FF;'>🧠 Mood Tracker</h1>", unsafe_allow_html=True)
@@ -68,9 +84,9 @@ if st.button("🔍 Prediksi Mood"):
             "Mood": [prediction], "Emoji": [emoji], "Score": [score]
         })
 
-        df_existing = pd.read_csv(HISTORY_FILE)
+        df_existing = pd.read_csv(history_file)
         df_updated = pd.concat([df_existing, new_entry], ignore_index=True)
-        df_updated.to_csv(HISTORY_FILE, index=False)
+        df_updated.to_csv(history_file, index=False)
 
         st.markdown("### 🎯 Hasil Prediksi:")
         st.markdown(f"<h1 style='text-align: center;'>{emoji}</h1>", unsafe_allow_html=True)
@@ -81,7 +97,7 @@ if st.button("🔍 Prediksi Mood"):
 
 # Tabs
 try:
-    df = pd.read_csv(HISTORY_FILE)
+    df = pd.read_csv(history_file)
     if df.empty:
         st.info("📭 Belum ada data histori. Silakan mulai prediksi terlebih dahulu.")
     else:
