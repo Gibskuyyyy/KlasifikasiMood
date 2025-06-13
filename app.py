@@ -41,21 +41,27 @@ label_indo = {
     'fear': 'Takut', 'love': 'Cinta', 'neutral': 'Netral'
 }
 
-# Input nama pengguna
-username = st.text_input("Masukkan nama atau ID kamu:")
-if not username:
-    st.warning("Harap masukkan nama/ID terlebih dahulu.")
-    st.stop()
+# ===== LOGIN DENGAN SESSION STATE =====
+if 'username' not in st.session_state:
+    with st.container():
+        st.markdown("""
+            <div style='background-color:#f0f4ff;padding:2rem 1rem;border-radius:12px;text-align:center'>
+                <h2 style='color:#6C63FF'>👤 Selamat Datang di Mood Tracker</h2>
+                <p style='color:gray'>Masukkan nama atau ID kamu untuk memulai</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        username_input = st.text_input("🆔 Nama/ID Kamu", placeholder="contoh: gibran", key="login_username")
+        if st.button("🔓 Masuk") and username_input:
+            st.session_state.username = username_input.strip().lower()
+            st.rerun()
+    st.stop()  # Jangan lanjutkan app sebelum login
+
+# Setelah login
+username = st.session_state.username
 
 username = username.strip().lower()
 history_file = f"history_{username}.csv"
-
-# Tombol reset histori
-if os.path.exists(history_file):
-    if st.button("🗑️ Reset histori saya"):
-        os.remove(history_file)
-        st.success("Histori berhasil direset.")
-        st.stop()
 
 # Inisialisasi file jika belum ada
 if not os.path.exists(history_file):
@@ -95,6 +101,12 @@ if st.button("🔍 Prediksi Mood"):
     else:
         st.warning("Silakan masukkan teks terlebih dahulu.")
 
+    st.markdown(f"✅ Sedang login sebagai: **{username.title()}**")
+    if st.button("🔄 Ganti Pengguna"):
+        del st.session_state.username
+        st.experimental_rerun()
+
+
 # Tabs
 try:
     df = pd.read_csv(history_file)
@@ -123,6 +135,12 @@ try:
                 file_name="riwayat_mood.csv",
                 mime="text/csv"
             )
+            # Tombol reset histori
+            if os.path.exists(history_file):
+                if st.button("🗑️ Reset histori saya"):
+                    os.remove(history_file)
+                    st.success("Histori berhasil direset.")
+                    st.stop()
 
         with tab2:
             st.markdown("### 🗓️ Kalender Mood Interaktif")
