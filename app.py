@@ -63,6 +63,13 @@ username = st.session_state.username
 username = username.strip().lower()
 history_file = f"history_{username}.csv"
 
+#login
+st.markdown(f"✅ Sedang login sebagai: **{username.title()}**")
+if st.button("🔄 Ganti Pengguna"):
+    if 'username' in st.session_state:
+        st.session_state.pop('username')
+    st.rerun()
+
 # Inisialisasi file jika belum ada
 if not os.path.exists(history_file):
     df_empty = pd.DataFrame(columns=["Waktu", "Teks", "Mood", "Emoji", "Score"])
@@ -101,11 +108,7 @@ if st.button("🔍 Prediksi Mood"):
     else:
         st.warning("Silakan masukkan teks terlebih dahulu.")
 
-    st.markdown(f"✅ Sedang login sebagai: **{username.title()}**")
-    if st.button("🔄 Ganti Pengguna"):
-        if 'username' in st.session_state:
-            st.session_state.pop('username')
-        st.rerun()
+
 
 
 
