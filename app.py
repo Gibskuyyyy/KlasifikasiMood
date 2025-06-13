@@ -105,7 +105,7 @@ if st.button("🔍 Prediksi Mood"):
     if st.button("🔄 Ganti Pengguna"):
         if 'username' in st.session_state:
             st.session_state.pop('username')
-            st.rerun()
+        st.rerun()
 
 
 
