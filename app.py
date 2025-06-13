@@ -103,9 +103,9 @@ if st.button("🔍 Prediksi Mood"):
 
     st.markdown(f"✅ Sedang login sebagai: **{username.title()}**")
     if st.button("🔄 Ganti Pengguna"):
-    if 'username' in st.session_state:
-        st.session_state.pop('username')
-        st.rerun()
+        if 'username' in st.session_state:
+            st.session_state.pop('username')
+            st.rerun()
 
 
 
